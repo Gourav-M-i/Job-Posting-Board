@@ -32,9 +32,9 @@ exports.login = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
         // if (!company.verified) return res.status(403).json({ message: 'Account is not verified' });
-
+        delete company.password
         const token = jwt.sign({ companyId: company._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token });
+        res.json({ token, company, company: company.companyName });
     } catch (err) {
         res.status(500).json({ error: 'Server Error' });
     }

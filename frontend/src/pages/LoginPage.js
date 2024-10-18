@@ -7,16 +7,12 @@ import { UserAuthContext } from "../context/AuthContext";
 import * as CONST from "../api/api-endpoints"
 
 // import {User} from '@heroicons/react'
-const SignUpPage = () => {
+const LoginPage = () => {
     const { setLoggedInUser } = useContext(UserAuthContext)
     const navigate = useNavigate()
 
     const [formData, setFormData] = useState({
-        name: '',
-        phone: '',
-        companyName: '',
         email: '',
-        employeeSize: '',
         password: ''
     });
 
@@ -30,10 +26,12 @@ const SignUpPage = () => {
     const handleCompanyProceed = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`${CONST.REACT_BACKEND_API}/auth/register`, formData)
+            const res = await axios.post(`${CONST.REACT_BACKEND_API}/auth/login`, formData)
             console.log(res);
-            if (res?.status === 201) {
-                navigate('/login')
+            if (res?.status === 200) {
+                setLoggedInUser(res?.data?.company)
+                localStorage.setItem('token', res.data.token)
+                navigate('/createinterview')
             }
         } catch (err) {
             console.error(err)
@@ -69,50 +67,7 @@ const SignUpPage = () => {
 
                             {/* Form */}
                             <form onSubmit={handleCompanyProceed}>
-                                {/* Name Field */}
-                                <div className="relative mb-4">
-                                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <UserIcon className="h-5 w-5 text-gray-400" />
-                                    </span>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        placeholder="Name"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        className="pl-10 p-3 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    />
-                                </div>
 
-                                {/* Phone Field */}
-                                <div className="relative mb-4">
-                                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <PhoneIcon className="h-5 w-5 text-gray-400" />
-                                    </span>
-                                    <input
-                                        type="text"
-                                        name="phone"
-                                        placeholder="Phone no."
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                        className="pl-10 p-3 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    />
-                                </div>
-
-                                {/* Company Name Field */}
-                                <div className="relative mb-4">
-                                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <BuildingOfficeIcon className="h-5 w-5 text-gray-400" />
-                                    </span>
-                                    <input
-                                        type="text"
-                                        name="companyName"
-                                        placeholder="Company Name"
-                                        value={formData.companyName}
-                                        onChange={handleChange}
-                                        className="pl-10 p-3 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    />
-                                </div>
 
                                 {/* Company Email Field */}
                                 <div className="relative mb-4">
@@ -144,27 +99,14 @@ const SignUpPage = () => {
                                     />
                                 </div>
 
-                                {/* Employee Size Field */}
-                                <div className="relative mb-4">
-                                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <UsersIcon className="h-5 w-5 text-gray-400" />
-                                    </span>
-                                    <input
-                                        type="text"
-                                        name="employeeSize"
-                                        placeholder="Employee Size"
-                                        value={formData.employeeSize}
-                                        onChange={handleChange}
-                                        className="pl-10 p-3 w-full border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    />
-                                </div>
+
                                 {/* Submit Button */}
                                 <button
                                     type="submit"
                                     className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors"
                                     onClick={handleCompanyProceed}
                                 >
-                                    Proceed
+                                    Login
                                 </button>
                             </form>
                         </div>
@@ -175,4 +117,4 @@ const SignUpPage = () => {
     );
 };
 
-export default SignUpPage;
+export default LoginPage;

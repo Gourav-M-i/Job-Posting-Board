@@ -56,10 +56,10 @@ const JobFormPage = () => {
         console.log(jobForm)
         setJobForm({ ...jobForm, company: loggedInUser })
         try {
-            const res = await axios.post(`${CONST.REACT_BACKEND_API}/jobs/post`, jobForm)
-            console.log()
+            const res = await axios.post(`${CONST.REACT_BACKEND_API}/jobs/post`, jobForm, { headers: { 'Authorization': localStorage.getItem('token') } })
+            console.log(res)
         } catch (err) {
-
+            console.error(err)
         }
     }
 
