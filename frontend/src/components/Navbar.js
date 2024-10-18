@@ -6,16 +6,16 @@ import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const navigate = useNavigate()
-    const { loggedInUser, setLoggedInUser } = useContext(UserAuthContext); // Assuming you have a logout function in context
-    const [dropdownOpen, setDropdownOpen] = useState(false); // State to control dropdown visibility
+    const { loggedInUser, setLoggedInUser } = useContext(UserAuthContext);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     };
 
     const handleLogout = () => {
-        setLoggedInUser(false) // Call the logout function from your context
-        setDropdownOpen(false); // Close the dropdown after logout
+        setLoggedInUser(false)
+        setDropdownOpen(false);
         localStorage.clear()
         navigate('/')
     };

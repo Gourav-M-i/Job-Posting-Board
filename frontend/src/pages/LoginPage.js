@@ -5,12 +5,14 @@ import { UserIcon, UsersIcon, PhoneIcon, BuildingOfficeIcon, EnvelopeIcon, EyeIc
 import axios from 'axios'
 import { UserAuthContext } from "../context/AuthContext";
 import * as CONST from "../api/api-endpoints"
+import toast, { Toaster } from 'react-hot-toast'
 
 // import {User} from '@heroicons/react'
 const LoginPage = () => {
     const { setLoggedInUser } = useContext(UserAuthContext)
     const navigate = useNavigate()
 
+    const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -26,21 +28,28 @@ const LoginPage = () => {
     const handleCompanyProceed = async (e) => {
         e.preventDefault();
         try {
+            setIsLoading(true)
             const res = await axios.post(`${CONST.REACT_BACKEND_API}/auth/login`, formData)
             console.log(res);
             if (res?.status === 200) {
                 setLoggedInUser(res?.data?.company)
                 localStorage.setItem('token', res.data.token)
+                setIsLoading(false)
                 navigate('/createinterview')
             }
+            toast.error('Invalid Credentials')
         } catch (err) {
             console.error(err)
+        }
+        finally {
+            setIsLoading(false);
         }
     }
     return (
         <>
             <div className="min-h-screen bg-white p-8">
                 <Navbar isLoggedIn={false} />
+
                 <div className="min-h-screen flex items-center justify-center bg-white">
 
                     <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-5xl px-8">
@@ -102,11 +111,12 @@ const LoginPage = () => {
 
                                 {/* Submit Button */}
                                 <button
+                                    disabled={isLoading}
                                     type="submit"
-                                    className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors"
+                                    className={`w-full ${isLoading ? 'bg-grey-500' : 'bg-blue-600'} text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors`}
                                     onClick={handleCompanyProceed}
                                 >
-                                    Login
+                                    {isLoading ? "Loading..." : "Login"}
                                 </button>
                             </form>
                         </div>

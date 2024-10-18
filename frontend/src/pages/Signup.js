@@ -11,6 +11,7 @@ const SignUpPage = () => {
     const { setLoggedInUser } = useContext(UserAuthContext)
     const navigate = useNavigate()
 
+    const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -30,13 +31,18 @@ const SignUpPage = () => {
     const handleCompanyProceed = async (e) => {
         e.preventDefault();
         try {
+            setIsLoading(true);
             const res = await axios.post(`${CONST.REACT_BACKEND_API}/auth/register`, formData)
             console.log(res);
             if (res?.status === 201) {
-                navigate('/login')
+                setIsLoading(false);
+                return navigate('/login')
             }
         } catch (err) {
             console.error(err)
+        }
+        finally {
+            setIsLoading(false);
         }
     }
     return (
@@ -161,10 +167,11 @@ const SignUpPage = () => {
                                 {/* Submit Button */}
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors"
+                                    disabled={isLoading}
+                                    className={`w-full ${isLoading ? 'bg-grey-500' : 'bg-blue-600'} text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors`}
                                     onClick={handleCompanyProceed}
                                 >
-                                    Proceed
+                                    {isLoading ? "Loading..." : "Proceed"}
                                 </button>
                             </form>
                         </div>
