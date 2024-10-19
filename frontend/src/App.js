@@ -12,6 +12,7 @@ import { Toaster } from 'react-hot-toast'
 function App() {
   return (
     <AuthContext>
+      <Toaster />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SignUpPage />} />

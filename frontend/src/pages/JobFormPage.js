@@ -4,14 +4,16 @@ import Sidebar from "../components/Sidebar";
 import axios from "axios";
 import * as CONST from '../api/api-endpoints'
 import { UserAuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
 const JobFormPage = () => {
     const { loggedInUser } = useContext(UserAuthContext)
+    console.log("vkklv", loggedInUser)
     const [candidates, setEmails] = useState([]);
     const [inputValue, setInputValue] = useState("");
     const [jobForm, setJobForm] = useState({
         title: '',
         description: '',
-        experiencelevel: '',
+        experienceLevel: '',
         candidates: [],
         endDate: '',
         company: ''
@@ -23,7 +25,6 @@ const JobFormPage = () => {
 
 
     const handleFormChange = (e) => {
-        console.log(e.target.name, "-", e.target.value)
         setJobForm({
             ...jobForm,
             [e.target.name]: e.target.value
@@ -53,13 +54,19 @@ const JobFormPage = () => {
 
     const handleJobSubmit = async (e) => {
         e.preventDefault()
-        console.log(jobForm)
         setJobForm({ ...jobForm, company: loggedInUser })
+        console.log(jobForm)
         try {
             const res = await axios.post(`${CONST.REACT_BACKEND_API}/jobs/post`, jobForm, { headers: { 'Authorization': localStorage.getItem('token') } })
             console.log(res)
+            if (res.status === 201) {
+                return toast.success(res?.data?.message)
+            }
+            toast.error("Something went wrong.")
         } catch (err) {
             console.error(err)
+            toast.error("Something went wrong.")
+
         }
     }
 

@@ -5,6 +5,7 @@ import { UserIcon, UsersIcon, PhoneIcon, BuildingOfficeIcon, EnvelopeIcon, EyeIc
 import axios from 'axios'
 import { UserAuthContext } from "../context/AuthContext";
 import * as CONST from "../api/api-endpoints"
+import toast from "react-hot-toast";
 
 // import {User} from '@heroicons/react'
 const SignUpPage = () => {
@@ -36,9 +37,12 @@ const SignUpPage = () => {
             console.log(res);
             if (res?.status === 201) {
                 setIsLoading(false);
+                toast.success("Registered Successfully")
                 return navigate('/login')
             }
+            toast.error("Something went wrong")
         } catch (err) {
+            toast.error("Something went wrong")
             console.error(err)
         }
         finally {

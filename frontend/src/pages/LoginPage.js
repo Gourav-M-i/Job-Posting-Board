@@ -35,7 +35,8 @@ const LoginPage = () => {
                 setLoggedInUser(res?.data?.company)
                 localStorage.setItem('token', res.data.token)
                 setIsLoading(false)
-                navigate('/createinterview')
+                toast.success('Loggedin Successfully')
+                return navigate('/createinterview')
             }
             toast.error('Invalid Credentials')
         } catch (err) {
